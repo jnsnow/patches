@@ -3,7 +3,7 @@ import setuptools
 def main():
     kwargs = {
         'name': 'patches',
-        'version': '0.3',
+        'version': '0.3.1',
         'packages': setuptools.find_packages(),
         'scripts': ['patches'],
     }

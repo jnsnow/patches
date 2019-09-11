@@ -26,15 +26,36 @@ from patchlib.series import is_pull_request, is_broken
 
 
 def apply_patch(pathname, **kwds):
-    opts = ['--3way']
+    optmap = {
+        'git': {
+            'signed-off-by': '-s',
+            'interactive': '-i'
+        },
+        'stg': {
+            'signed-off-by': '--sign',
+            'interactive': ''
+        },
+    }
+
+    if 'stgit' in kwds:
+        opts = ['stg', 'import', '-M']
+        del kwds['stgit']
+        toolcfg = optmap['stg']
+    else:
+        opts = ['git', 'am']
+        toolcfg = optmap['git']
+
+    opts.append('--3way')
+
     if 'signed-off-by' in kwds:
-        opts.append('-s')
+        opts.append(toolcfg['signed-off-by'])
         del kwds['signed-off-by']
     if 'interactive' in kwds:
-        opts.append('-i')
+        opts.append(toolcfg['interactive'])
         del kwds['interactive']
+
     opts.append(pathname)
-    return call_teed_output(['git', 'am'] + opts, **kwds)
+    return call_teed_output(opts, **kwds)
 
 
 def apply_pull_request(msg, **kwds):
@@ -100,6 +121,8 @@ def main(args):
         kwds['signed-off-by'] = True
     if args.interactive:
         kwds['interactive'] = True
+    if args.stgit:
+        kwds['stgit'] = True
 
     for series in find_subseries(patches, args):
         try:
