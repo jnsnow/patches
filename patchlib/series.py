@@ -10,12 +10,11 @@
 # See the COPYING file in the top-level directory.
 #
 
-import message
-import config
+from patchlib import config
 
 def any_committed(series):
     for message in series['messages']:
-        if message.has_key('commit'):
+        if 'commit' in message:
             return True
     return False
 
@@ -33,10 +32,10 @@ def is_committed(series):
         return False
 
     for message in series['messages']:
-        if message.has_key('cover') and message['cover']:
+        if message.get('cover'):
             continue
 
-        if not message.has_key('commit'):
+        if 'commit' not in message:
             return False
         else:
             committed = True
@@ -47,10 +46,10 @@ def is_committed_in_branch(series, branch):
     committed = False
 
     for message in series['messages']:
-        if message.has_key('cover') and message['cover']:
+        if message.get('cover'):
             continue
 
-        if not message.has_key('commit'):
+        if 'commit' not in message:
             return False
         elif message['tree'] != branch:
             return False
@@ -63,7 +62,7 @@ def is_reviewed(series):
     found = False
 
     for message in series['messages']:
-        if message.has_key('cover') and message['cover']:
+        if message.get('cover'):
             if 'Reviewed-by' in message['tags']:
                 return True
             continue
@@ -76,17 +75,17 @@ def is_reviewed(series):
     return found
 
 def is_pull_request(series):
-    if series['messages'][0].has_key('pull-request'):
+    if 'pull-request' in series['messages'][0]:
         return series['messages'][0]['pull-request']
     return False
 
 def is_obsolete(series):
-    if series['messages'][0].has_key('obsolete'):
+    if 'obsolete' in series['messages'][0]:
         return series['messages'][0]['obsolete']
     return False
     
 def is_broken(series):
-    if series.has_key('broken') and series['broken']:
+    if series.get('broken'):
         return True
     return False
 

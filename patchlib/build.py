@@ -1,14 +1,23 @@
-import config, mbox, data, apply, list, gitcmd, util
-import shutil, errno, os, sys, json
+import errno
+import json
+import shutil
 from subprocess import check_call
-from util import call_teed_output
-from series import *
+
+from patchlib import (
+    apply,
+    config,
+    data,
+    gitcmd,
+    list,
+    util
+)
+from patchlib.apply import is_pull_request
 
 def try_rmtree(path):
     try:
         shutil.rmtree(path)
-    except OSError, (num, msg):
-        if num != errno.ENOENT:
+    except OSError as err:
+        if err.errno != errno.ENOENT:
             raise
 
 def try_to_build(series, working_dir, commit, bot):
@@ -28,12 +37,12 @@ def try_to_build(series, working_dir, commit, bot):
 
     cmds = config.get_buildbot(bot)
     for step, cmd in cmds:
-        s, o = call_teed_output(['/bin/sh', '-c', cmd], cwd=working_dir)
+        s, o = util.call_teed_output(['/bin/sh', '-c', cmd], cwd=working_dir)
         steps.append((step, s, o))
         if s != 0:
             return s, steps
 
-    steps = map(lambda (name, s, o): (name, s, ''), steps)
+    steps = map(lambda name, s, o: (name, s, ''), steps)
 
     return 0, steps
 

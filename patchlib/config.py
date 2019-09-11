@@ -10,8 +10,10 @@
 # See the COPYING file in the top-level directory.
 #
 
-from ConfigParser import RawConfigParser
-import os.path, email.utils, os
+from collections.abc import Iterable
+from configparser import RawConfigParser
+import email.utils
+import os
 
 ini = RawConfigParser()
 config_filename = None
@@ -188,7 +190,7 @@ def main(args):
     if value == None:
         return 1
     elif type(value) == list:
-        print ';'.join(value)
+        print(';'.join(value))
     elif value:
-        print value
+        print(value)
     return 0

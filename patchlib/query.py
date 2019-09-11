@@ -10,8 +10,15 @@
 # See the COPYING file in the top-level directory.
 #
 
-import config, message, email.utils
-from series import *
+from collections.abc import Sequence
+import email.utils
+
+from patchlib import (
+    config,
+    message
+)
+from patchlib.series import (is_broken, is_rfc, is_pull_request, is_obsolete,
+                             is_committed, is_applied, is_reviewed)
 
 def match_flat_email_address(lhs, rhs):
     val = {}
@@ -260,13 +267,13 @@ def eval_query(series, terms, scope='any'):
 if __name__ == '__main__':
     a = '(status:foo or status:bar)'
     t = tokenize_query(a)
-    print t
-    print parse_query(t)
+    print(t)
+    print(parse_query(t))
     a = 'not (status:foo or status:bar)'
     t = tokenize_query(a)
-    print t
-    print parse_query(t)
+    print(t)
+    print(parse_query(t))
     a = 'not status:foo or status:bar'
     t = tokenize_query(a)
-    print t
-    print parse_query(t)
+    print(t)
+    print(parse_query(t))

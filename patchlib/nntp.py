@@ -10,10 +10,20 @@
 # See the COPYING file in the top-level directory.
 #
 
-import nntplib, email, datetime, notmuch, mailbox, os
-from ConfigParser import RawConfigParser
-import config, util, sys
+from configparser import RawConfigParser
+import email
+import mailbox
+import nntplib
+import os
 from subprocess import check_call
+import sys
+
+import notmuch
+
+from patchlib import (
+    config,
+    util
+)
 
 def fetch_msg(self, num):
     _, _, _, head = self.head(str(num))
@@ -26,7 +36,7 @@ def setup(args):
 
     try:
         os.makedirs(git_dir.rsplit('/', 1)[0])
-    except Exception, e:
+    except:
         pass
 
     git = ['git', '--git-dir=%s' % git_dir]
@@ -36,7 +46,7 @@ def setup(args):
 
     try:
         os.makedirs(maildir.rsplit('/', 1)[0])
-    except Exception, e:
+    except:
         pass
 
     mdir = mailbox.Maildir(maildir, create=True)

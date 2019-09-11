@@ -10,8 +10,9 @@
 # See the COPYING file in the top-level directory.
 #
 
+import os
 from subprocess import Popen, PIPE, STDOUT
-import os, sys
+import sys
 
 def call_teed_output(args, **kwds):
     p = Popen(args, stdout=PIPE, stderr=STDOUT, **kwds)
@@ -34,7 +35,7 @@ def backup_file(filename):
         with open(filename, 'r') as infp:
             with open(backup, 'w') as outfp:
                 outfp.write(infp.read())
-    except Exception, e:
+    except:
         pass
 
     return tmp_filename
