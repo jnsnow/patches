@@ -44,7 +44,7 @@ def setup(filename):
     ini.read(filename)
 
 def parse_list(value):
-    if value == None:
+    if value is None:
         return []
     elif value.find(';') == -1:
         return [value]
@@ -187,9 +187,10 @@ get_buildbots = option('buildbots.bots')
 
 def main(args):
     value = get(args.key)
-    if value == None:
+    if value is None:
         return 1
-    elif type(value) == list:
+
+    if isinstance(value, Iterable):
         print(';'.join(value))
     elif value:
         print(value)

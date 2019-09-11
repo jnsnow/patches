@@ -55,12 +55,12 @@ def run_bot(patches, working_dir, commit, bot, query):
 
         result = series
         s, steps = try_to_build(series, working_dir, commit, bot)
-        result['buildbot'] = { 'status': s, 'steps': steps }
+        result['buildbot'] = {'status': s, 'steps': steps}
         results.append(result)
 
-    results = { 'patches': results,
-                'version': data.VERSION,
-                'owner': config.get_buildbot_owner(bot) }
+    results = {'patches': results,
+               'version': data.VERSION,
+               'owner': config.get_buildbot_owner(bot)}
 
     try_rmtree(working_dir)
     util.replace_file(config.get_buildbot_json(bot),
@@ -82,6 +82,3 @@ def main(args):
     for bot in bots:
         q = config.get_buildbot_query(bot)
         run_bot(patches, working_dir, commit, bot, q)
-
-            
-    

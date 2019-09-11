@@ -72,7 +72,7 @@ def tokenize_query(query):
     return terms
 
 def parse_query_unary(terms):
-    if type(terms) == list:
+    if isinstance(terms, Sequence) and not isinstance(terms, (str, bytes)):
         if terms[0] == '(':
             query, rest = parse_query(terms[1:])
             if rest[0] != ')':
@@ -84,7 +84,7 @@ def parse_query_unary(terms):
         else:
             return parse_query(terms[0])[0], terms[1:]
     else:
-        return ['term', terms ], None
+        return ['term', terms], None
 
 def parse_query_binop(terms):
     lhs, rest = parse_query_unary(terms)
@@ -146,11 +146,11 @@ def eval_query_term(series, term, scope):
             return is_rfc(series)
         elif status == 'unapplied':
             return not (is_broken(series) or
-                       is_obsolete(series) or
-                       is_pull_request(series) or
-                       is_rfc(series) or
-                       is_committed(series) or
-                       is_applied(series))
+                        is_obsolete(series) or
+                        is_pull_request(series) or
+                        is_rfc(series) or
+                        is_committed(series) or
+                        is_applied(series))
         elif status == 'committed':
             return is_committed(series)
         elif status == 'reviewed':
@@ -161,11 +161,11 @@ def eval_query_term(series, term, scope):
             raise Exception("Unknown status `%s'" % status)
     elif command == 'label':
         txt = config.get_label(args)
-        if txt == None:
+        if txt is None:
             raise Exception('Invalid label %s' % args)
         tks = tokenize_query(txt)
-        t, _ = parse_query(tks)
-        return eval_query(series, t, scope)
+        tk, _ = parse_query(tks)
+        return eval_query(series, tk, scope)
     elif command == 'from':
         def fn(msg):
             return match_email_address(msg['from'], args)
@@ -220,14 +220,14 @@ def eval_query_term(series, term, scope):
                 else:
                     return bool(not bot['status'])
 
-            for step, status, output in steps:
+            for step, status, _output in steps:
                 if step == item:
                     if fail:
                         return bool(status)
                     else:
                         return bool(not status)
             return False
-    elif command != None:
+    elif command is not None:
         command = message.format_tag_name(command)
         email_tags = config.get_email_tags()
 
@@ -247,6 +247,7 @@ def eval_query_term(series, term, scope):
         def fn(msg):
             return msg['subject'].lower().find(term.lower()) != -1
         return eval_messages(series, fn, scope)
+    return None
 
 def eval_query(series, terms, scope='any'):
     if terms[0] == 'and':

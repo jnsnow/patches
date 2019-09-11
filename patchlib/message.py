@@ -21,12 +21,12 @@ def escape_message_id(mid):
 
 def parse_email_address(value):
     name, mail = parseaddr(value)
-    return { 'name': name, 'email': mail }
+    return {'name': name, 'email': mail}
 
 def parse_email_addresses(value):
     if value:
         if value.find(', ') == -1:
-            return [ parse_email_address(value) ]
+            return [parse_email_address(value)]
         else:
             return list(map(parse_email_address, value.split(', ')))
     return []
@@ -46,7 +46,7 @@ def get_header(msg, name):
     return value
 
 def get_subject(msg):
-    list_tag = '[%s] ' % config.get_list_tag();
+    list_tag = '[%s] ' % config.get_list_tag()
     subject = get_header(msg, 'Subject')
     if subject.startswith(list_tag):
         subject = subject[len(list_tag):].strip()
@@ -71,11 +71,11 @@ def decode_subject(msg):
     return decode_subject_text(subject)
 
 def decode_subject_text(subject):
-    ret = { 'n': 1, 'm': 1, 'version': 1, 
-            'patch': False, 'rfc': False }
+    ret = {'n': 1, 'm': 1, 'version': 1,
+           'patch': False, 'rfc': False}
     patch_tags = []
 
-    while len(subject) and subject[0] == '[':
+    while subject and subject[0] == '[':
         bracket, subject = find_and_split(subject[1:], ']')
         subject = subject.lstrip()
 
@@ -126,26 +126,22 @@ def decode_subject_text(subject):
 
     return ret
 
-def is_capital(ch):
-    return ch >= 'A' and ch <= 'Z'
-
-def is_lower(ch):
-    return ch >= 'a' and ch <= 'z'
-
 def format_tag_name(key):
     return key[0].upper() + key[1:].lower()
 
-def parse_tag(line, extra_tags=[]):
+def parse_tag(line, extra_tags=None):
     if not line:
         return None
+    if extra_tags is None:
+        extra_tags = []
 
     i = 0
-    if not is_capital(line[i]):
+    if not line[i].isupper():
         return None
 
     i += 1
-    while i < len(line) and (is_capital(line[i]) or
-                             is_lower(line[i]) or
+    while i < len(line) and (line[i].isupper() or
+                             line[i].islower() or
                              line[i] == '-'):
         i += 1
 
@@ -158,7 +154,7 @@ def parse_tag(line, extra_tags=[]):
     if key not in (config.get_email_tags() + extra_tags) or not value:
         return None
 
-    return { key: [value] }
+    return {key: [value]}
 
 def merge_tags(lhs, rhs):
     val = {}
@@ -177,7 +173,7 @@ def merge_tags(lhs, rhs):
                 val[key].append(tag)
 
     return val
-    
+
 def isin(needle, lst):
     for item in lst:
         if needle['name'] == item['name'] and needle['email'] == item['email']:
@@ -238,4 +234,3 @@ def is_cover(msg):
 def is_patch(msg):
     ret = decode_subject(msg)
     return ret['patch']
-    

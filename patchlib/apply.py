@@ -25,7 +25,7 @@ from patchlib.util import call_teed_output
 from patchlib.series import is_pull_request, is_broken
 
 def apply_patch(pathname, **kwds):
-    opts = [ '--3way' ]
+    opts = ['--3way']
     if 'signed-off-by' in kwds:
         opts.append('-s')
         del kwds['signed-off-by']
@@ -77,13 +77,13 @@ def apply_pull_request(msg, **kwds):
     return call_teed_output(['git', 'commit', '--amend', '-m', o], **kwds)
 
 def apply_series(series, **kwds):
-   if is_pull_request(series):
-       return apply_pull_request(series['messages'][0], **kwds)
-   elif is_broken(series):
-       raise Exception('Cannot apply series: series is either incomplete or improperly threaded.')
-   elif not 'mbox_path' in series:
-       raise Exception('Cannot apply series: missing mbox')
-   return apply_patch(mbox.get_real_path(series['mbox_path']), **kwds)
+    if is_pull_request(series):
+        return apply_pull_request(series['messages'][0], **kwds)
+    elif is_broken(series):
+        raise Exception('Cannot apply series: series is either incomplete or improperly threaded.')
+    elif not 'mbox_path' in series:
+        raise Exception('Cannot apply series: missing mbox')
+    return apply_patch(mbox.get_real_path(series['mbox_path']), **kwds)
 
 def main(args):
     with open(config.get_json_path(), 'rb') as fp:

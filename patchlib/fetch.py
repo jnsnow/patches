@@ -68,7 +68,7 @@ def fetch(url=None):
                 if 'buildbot' not in series:
                     continue
 
-                mid = series['messages'][0]['message-id'] 
+                mid = series['messages'][0]['message-id']
                 if mid not in mids:
                     mids[mid] = {}
                 mids[mid][name] = series['buildbot']

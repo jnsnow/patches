@@ -44,7 +44,7 @@ def try_to_send(args, notified_dir, sender, message, payload):
 
     msg = email.message.Message()
 
-    receipents = [ message['from'] ]
+    receipents = [message['from']]
     receipents += message['to']
     receipents += message['cc']
     receipents = list(map(format_addr, receipents))
@@ -52,7 +52,7 @@ def try_to_send(args, notified_dir, sender, message, payload):
     msg['From'] = sender
     msg['Subject'] = 'Re: %s' % message['subject']
     msg['Cc'] = encode_address_list(message['cc'])
-    msg['To'] = encode_address_list([ message['from'] ] + message['to'])
+    msg['To'] = encode_address_list([message['from']] + message['to'])
     msg['In-Reply-To'] = '<%s>' % message['message-id']
     msg['Date'] = email.utils.formatdate()
 
@@ -119,9 +119,9 @@ def main(args):
     except:
         pass
 
-    if args.smtp_server != None:
+    if args.smtp_server is not None:
         config.set('notify', 'smtp_server', args.smtp_server)
-    if args.sender != None:
+    if args.sender is not None:
         config.set('notify', 'default_sender', args.sender)
 
     with open(config.get_json_path(), 'rb') as fp:
@@ -139,7 +139,7 @@ def main(args):
     for label, filename in nots:
         with open(filename, 'rb') as fp:
             template = fp.read()
-        
+
         notify(args, patches, notified_dir, 'label:%s' % label, template)
 
     return 0

@@ -22,11 +22,11 @@ def search_subseries(patches, query_str):
 
     tokens = query.tokenize_query(query_str)
     q, _ = query.parse_query(tokens)
-    
+
     for series in patches:
         if not query.eval_query(series, q):
             continue
-    
+
         sub_series.append(series)
 
     return sub_series
@@ -44,10 +44,10 @@ def dump_notmuch_query(patches, args):
     def fn(series):
         return 'id:"%s"' % series['messages'][0]['message-id']
 
-    query = ' or '.join(map(fn, sub_series))
+    query_str = ' or '.join(map(fn, sub_series))
 
     db = notmuch.Database(config.get_notmuch_dir())
-    q = notmuch.Query(db, query)
+    q = notmuch.Query(db, query_str)
 
     tids = []
     for thread in q.search_threads():

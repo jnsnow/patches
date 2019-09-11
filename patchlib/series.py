@@ -83,7 +83,7 @@ def is_obsolete(series):
     if 'obsolete' in series['messages'][0]:
         return series['messages'][0]['obsolete']
     return False
-    
+
 def is_broken(series):
     if series.get('broken'):
         return True
@@ -93,6 +93,4 @@ def is_rfc(series):
     return "rfc" in series['messages'][0] and series['messages'][0]['rfc']
 
 def has_subject_tags(series):
-    if "subject-tags" in series['messages'][0] and len(series['messages'][0]['subject-tags']):
-        return True
-    return False
+    return bool(series['messages'][0].get('subject-tags'))

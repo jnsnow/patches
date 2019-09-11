@@ -21,8 +21,8 @@ def git(*args, **kwds):
         git_dir = config.get_git_dir()
     else:
         git_dir = kwds['git_dir']
-    
-    if git_dir == None:
+
+    if git_dir is None:
         git_dir = ''
     else:
         git_dir = ' --git-dir="%s"' % git_dir
@@ -66,16 +66,19 @@ def get_merges(since):
         commit = lines[i]
         heads = lines[i + 1].split()
         for head in heads:
-            merged_heads[head] = { 'commit': commit,
-                                   'committer': { 'name': lines[i + 2],
-                                                  'email': lines[i + 3] } }
+            merged_heads[head] = {
+                'commit': commit,
+                'committer': {
+                    'name': lines[i + 2],
+                    'email': lines[i + 3]
+                }
+            }
 
     return merged_heads
 
 def get_commits(since, trees):
     mapping = {}
 
-    git_dir = config.get_git_dir()
     master_branch = config.get_master_branch()
 
     for branch in trees:
@@ -91,21 +94,20 @@ def get_commits(since, trees):
             if (i + 3) >= len(lines):
                 continue
 
-            pairs.append({ 'hexsha': lines[i],
-                           'summary': lines[i + 1],
-                           'branch': branch,
-                           'committer': { 'name': lines[i + 2],
-                                          'email': lines[i + 3] } })
+            pairs.append({'hexsha': lines[i],
+                          'summary': lines[i + 1],
+                          'branch': branch,
+                          'committer': {'name': lines[i + 2],
+                                        'email': lines[i + 3]}})
 
         for commit in pairs:
             s = commit['summary']
             if s in mapping:
                 hsh = mapping[s]
-                if type(hsh) != list:
+                if not isinstance(hsh, Sequence):
                     mapping[s] = [commit]
                 mapping[s].append(commit)
             else:
                 mapping[s] = commit
 
     return mapping
-
