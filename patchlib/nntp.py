@@ -25,10 +25,12 @@ from patchlib import (
     util
 )
 
+
 def fetch_msg(self, num):
     _, _, _, head = self.head(str(num))
     _, _, _, body = self.body(str(num))
     return email.message_from_string('\n'.join(head + body))
+
 
 def setup(args):
     maildir = config.get_notmuch_dir()
@@ -74,6 +76,7 @@ def setup(args):
 
     return 0
 
+
 def refresh(_args):
     maildir = config.get_notmuch_dir()
 
@@ -95,7 +98,7 @@ def refresh(_args):
 
         db.begin_atomic()
         try:
-            msg, _status = db.add_message(filename)
+            _msg, _status = db.add_message(filename)
         finally:
             db.end_atomic()
 

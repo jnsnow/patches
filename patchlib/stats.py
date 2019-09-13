@@ -14,11 +14,13 @@ import sys
 
 from patchlib import data
 
+
 def is_reviewed(patch_):
     for tag in patch_['tags']:
         if tag.startswith('Reviewed-by: '):
             return True
     return False
+
 
 patches = data.parse_json(sys.stdin.read())
 

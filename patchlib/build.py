@@ -13,12 +13,14 @@ from patchlib import (
 )
 from patchlib.apply import is_pull_request
 
+
 def try_rmtree(path):
     try:
         shutil.rmtree(path)
     except OSError as err:
         if err.errno != errno.ENOENT:
             raise
+
 
 def try_to_build(series, working_dir, commit, bot):
     try_rmtree(working_dir)
@@ -46,6 +48,7 @@ def try_to_build(series, working_dir, commit, bot):
 
     return 0, steps
 
+
 def run_bot(patches, working_dir, commit, bot, query):
     results = []
 
@@ -67,6 +70,7 @@ def run_bot(patches, working_dir, commit, bot, query):
                       json.dumps(results, indent=2,
                                  separators=(',', ': '),
                                  encoding='iso-8859-1'))
+
 
 def main(args):
     with open(config.get_json_path(), 'rb') as fp:

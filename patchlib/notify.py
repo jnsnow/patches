@@ -25,6 +25,7 @@ from patchlib import (
 from patchlib.list import search_subseries
 from patchlib.message import escape_message_id
 
+
 def format_addr(addr):
     name = addr['name']
 
@@ -34,8 +35,10 @@ def format_addr(addr):
 
     return email.utils.formataddr((name, addr['email']))
 
+
 def encode_address_list(addrs):
     return ', '.join(map(format_addr, addrs))
+
 
 def try_to_send(args, notified_dir, sender, message, payload):
     mid = escape_message_id(message['message-id'])
@@ -85,6 +88,7 @@ def try_to_send(args, notified_dir, sender, message, payload):
     print(txt_msg)
     print('-' * 80)
 
+
 class SeriesDict(UserDict):
     def __init__(self, series):
         UserDict.__init__(self)
@@ -105,11 +109,13 @@ class SeriesDict(UserDict):
 
         return value
 
+
 def notify(args, patches, notified_dir, query, template):
     sender = config.get_default_sender()
     for series in search_subseries(patches, query):
         sd = SeriesDict(series)
         try_to_send(args, notified_dir, sender, series['messages'][0], template % sd)
+
 
 def main(args):
     notified_dir = config.get_notified_dir()
@@ -130,8 +136,9 @@ def main(args):
     nots = []
     if args.labels:
         print(args.labels)
+
         def fn(x):
-            return (x, config.get_notification(x))
+            return x, config.get_notification(x)
         nots = list(map(fn, args.labels))
     else:
         nots = config.get_notifications()

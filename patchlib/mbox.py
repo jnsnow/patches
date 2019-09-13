@@ -21,11 +21,13 @@ from patchlib.message import (
     get_payload, merge_tags, parse_tag, escape_message_id
 )
 
+
 def setup_mboxes():
     try:
         os.makedirs(config.get_mbox_path())
     except:
         pass
+
 
 def add_tags(message, tags):
     lines = []
@@ -91,8 +93,8 @@ def add_tags(message, tags):
         else:
             lines.append(line)
 
-
     return '\n'.join(lines)
+
 
 def generate_mbox(messages, full_tags):
     mbox_dir = config.get_mbox_path()
@@ -124,8 +126,10 @@ def generate_mbox(messages, full_tags):
 
     return config.get_mbox_prefix() + ('mbox-%s' % mid)
 
+
 def get_real_path(mbox_path):
     return '%s/%s' % (config.get_mbox_path(), mbox_path[len(config.get_mbox_prefix()):])
+
 
 def get_hash(mbox_path):
     real_path = get_real_path(mbox_path)

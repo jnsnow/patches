@@ -11,10 +11,13 @@
 #
 
 from collections.abc import Sequence
-from subprocess import getstatusoutput
-from subprocess import check_output
+from subprocess import (
+    getstatusoutput,
+    check_output
+)
 
 from patchlib import config
+
 
 def git(*args, **kwds):
     if 'git_dir' not in kwds:
@@ -32,11 +35,13 @@ def git(*args, **kwds):
         raise Exception(o)
     return o
 
+
 def get_sha1(refspec):
     s, o = getstatusoutput('git --git-dir="%s" log -n 1 --format="%%H" %s' % (config.get_git_dir(), refspec))
     if s != 0:
         raise Exception(o)
     return o
+
 
 def get_remotes(cwd=None, **kwds):
     o = check_output(['git', 'remote', 'show'], cwd=cwd)
@@ -51,6 +56,7 @@ def get_remotes(cwd=None, **kwds):
         remotes[uri.strip()] = remote
 
     return remotes
+
 
 def get_merges(since):
     refspec = config.get_master_branch()
@@ -75,6 +81,7 @@ def get_merges(since):
             }
 
     return merged_heads
+
 
 def get_commits(since, trees):
     mapping = {}

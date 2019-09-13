@@ -22,11 +22,13 @@ from patchlib import (
 )
 from patchlib.util import replace_file
 
+
 def main(args):
     if not args.url:
         fetch()
     else:
         fetch(args.url)
+
 
 def fetch(url=None):
     if not url:

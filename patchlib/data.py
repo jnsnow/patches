@@ -14,6 +14,7 @@ import json
 
 VERSION = 1
 
+
 def parse_json(data, full=False):
     info = json.loads(data, encoding='utf8')
     if info['version'] != VERSION:

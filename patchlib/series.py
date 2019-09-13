@@ -12,14 +12,17 @@
 
 from patchlib import config
 
+
 def any_committed(series):
     for message in series['messages']:
         if 'commit' in message:
             return True
     return False
 
+
 def is_applied(series):
     return 'applied-by' in series['messages'][0]
+
 
 def is_committed(series):
     committed = False
@@ -42,6 +45,7 @@ def is_committed(series):
 
     return committed
 
+
 def is_committed_in_branch(series, branch):
     committed = False
 
@@ -57,6 +61,7 @@ def is_committed_in_branch(series, branch):
             committed = True
 
     return committed
+
 
 def is_reviewed(series):
     found = False
@@ -74,23 +79,28 @@ def is_reviewed(series):
 
     return found
 
+
 def is_pull_request(series):
     if 'pull-request' in series['messages'][0]:
         return series['messages'][0]['pull-request']
     return False
+
 
 def is_obsolete(series):
     if 'obsolete' in series['messages'][0]:
         return series['messages'][0]['obsolete']
     return False
 
+
 def is_broken(series):
     if series.get('broken'):
         return True
     return False
 
+
 def is_rfc(series):
     return "rfc" in series['messages'][0] and series['messages'][0]['rfc']
+
 
 def has_subject_tags(series):
     return bool(series['messages'][0].get('subject-tags'))

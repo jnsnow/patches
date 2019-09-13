@@ -20,10 +20,12 @@ from patchlib import (
 from patchlib.series import (is_broken, is_rfc, is_pull_request, is_obsolete,
                              is_committed, is_applied, is_reviewed)
 
+
 def match_flat_email_address(lhs, rhs):
     val = {}
     val['name'], val['email'] = email.utils.parseaddr(lhs)
     return match_email_address(val, rhs)
+
 
 def match_email_address(lhs, rhs):
     lhs_name = lhs['name'].lower()
@@ -37,6 +39,7 @@ def match_email_address(lhs, rhs):
         return True
 
     return False
+
 
 def tokenize_query(query):
     terms = []
@@ -71,12 +74,13 @@ def tokenize_query(query):
 
     return terms
 
+
 def parse_query_unary(terms):
     if isinstance(terms, Sequence) and not isinstance(terms, (str, bytes)):
         if terms[0] == '(':
             query, rest = parse_query(terms[1:])
             if rest[0] != ')':
-                raise Exception('Expected paranthesis, got %s' % rest[0])
+                raise Exception('Expected parenthesis, got %s' % rest[0])
             return ['quote', query], rest[1:]
         elif terms[0] in ['any', 'all', 'not']:
             query, rest = parse_query_unary(terms[1:])
@@ -85,6 +89,7 @@ def parse_query_unary(terms):
             return parse_query(terms[0])[0], terms[1:]
     else:
         return ['term', terms], None
+
 
 def parse_query_binop(terms):
     lhs, rest = parse_query_unary(terms)
@@ -102,8 +107,10 @@ def parse_query_binop(terms):
             return lhs, rest
         return ['and', lhs, rhs], rest
 
+
 def parse_query(terms):
     return parse_query_binop(terms)
+
 
 def eval_messages(series, fn, scope, cover=True):
     ret = None
@@ -126,6 +133,7 @@ def eval_messages(series, fn, scope, cover=True):
                 break
 
     return ret
+
 
 def eval_query_term(series, term, scope):
     if term.find(':') != -1:
@@ -249,6 +257,7 @@ def eval_query_term(series, term, scope):
         return eval_messages(series, fn, scope)
     return None
 
+
 def eval_query(series, terms, scope='any'):
     if terms[0] == 'and':
         return eval_query(series, terms[1], scope) and eval_query(series, terms[2], scope)
@@ -264,6 +273,7 @@ def eval_query(series, terms, scope='any'):
         return eval_query_term(series, terms[1], scope)
     else:
         raise Exception('Unexpected node type')
+
 
 if __name__ == '__main__':
     a = '(status:foo or status:bar)'

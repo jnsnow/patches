@@ -14,6 +14,7 @@ from subprocess import check_call
 
 import config
 
+
 def invoke(name):
     command = config.get_hook(name)
     if command:

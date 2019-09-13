@@ -14,6 +14,7 @@ import os
 from subprocess import Popen, PIPE, STDOUT
 import sys
 
+
 def call_teed_output(args, **kwds):
     p = Popen(args, stdout=PIPE, stderr=STDOUT, **kwds)
     out = ''
@@ -21,6 +22,7 @@ def call_teed_output(args, **kwds):
         sys.stdout.write(line)
         out += line
     return p.wait(), out
+
 
 def backup_file(filename):
     backup = "%s~" % filename
@@ -40,6 +42,7 @@ def backup_file(filename):
 
     return tmp_filename
 
+
 def replace_cfg(filename, ini):
     tmp_filename = backup_file(filename)
 
@@ -47,6 +50,7 @@ def replace_cfg(filename, ini):
         ini.write(fp)
 
     os.rename(tmp_filename, filename)
+
 
 def replace_file(filename, data):
     tmp_filename = backup_file(filename)

@@ -26,16 +26,20 @@ from patchlib import (
 from patchlib import series as series_
 from util import replace_file
 
+
 def days_to_seconds(value):
     return value * 24 * 60 * 60
+
 
 def unique(lst):
     return list(set(lst))
 
 ##################################
 
+
 thread_leaders = {}
 full_thread_leaders = {}
+
 
 def build_thread_leaders(q, then):
     global thread_leaders, full_thread_leaders
@@ -70,6 +74,7 @@ def build_thread_leaders(q, then):
 
     return oldest
 
+
 def is_leader_obsolete(subject, version, date):
     val = full_thread_leaders[subject]
     for i in range(len(val) - 1):
@@ -80,6 +85,7 @@ def is_leader_obsolete(subject, version, date):
                 return True
             break
     return False
+
 
 def build_patch(commits, merged_heads, msg, trees, leader=False):
     patch = {}
@@ -103,7 +109,7 @@ def build_patch(commits, merged_heads, msg, trees, leader=False):
                 try:
                     uri, refspec = stripped_line.split(' ', 1)
                 except ValueError:
-                    continue # not a pull refspec
+                    continue  # not a pull refspec
 
                 patch['pull-request']['uri'] = uri
                 patch['pull-request']['refspec'] = refspec
@@ -153,6 +159,7 @@ def build_patch(commits, merged_heads, msg, trees, leader=False):
     patch['full_date'] = msg.get_date()
 
     return patch
+
 
 def fixup_pull_request(series, merged_heads):
     if 'head' in series['messages'][0]['pull-request']:
@@ -269,6 +276,7 @@ def build_patches(notmuch_dir, search_days, mail_query, trees):
         patches.append(series)
 
     return patches
+
 
 def main(_args):
     import data
