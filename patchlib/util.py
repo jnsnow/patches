@@ -16,12 +16,13 @@ import sys
 
 
 def call_teed_output(args, **kwds):
-    p = Popen(args, stdout=PIPE, stderr=STDOUT, **kwds)
-    out = ''
-    for line in iter(p.stdout.readline, ''):
+    p = Popen(args, stdout=PIPE, stderr=STDOUT,
+              universal_newlines=True, **kwds)
+    output = []
+    for line in p.stdout:
         sys.stdout.write(line)
-        out += line
-    return p.wait(), out
+        output.append(line)
+    return p.wait(), "".join(output)
 
 
 def backup_file(filename):
