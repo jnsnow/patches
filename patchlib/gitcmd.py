@@ -14,7 +14,7 @@ from collections.abc import Sequence
 from subprocess import getstatusoutput
 from subprocess import check_output
 
-import config
+from patchlib import config
 
 def git(*args, **kwds):
     if 'git_dir' not in kwds:
